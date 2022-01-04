@@ -34,9 +34,9 @@ namespace Weland.Cs.Api.Sample.ImportClient
 {
     public partial class ImportForm : Form
     {
-        private readonly ItemDataTable _itemDataTable = new ItemDataTable();
-        private readonly OrderDataTable _orderDataTable = new OrderDataTable();
-        private readonly ImportService _importService = new ImportService();
+        private readonly ItemDataTable _itemDataTable = new();
+        private readonly OrderDataTable _orderDataTable = new();
+        private readonly ImportService _importService = new();
 
         public ImportForm()
         {

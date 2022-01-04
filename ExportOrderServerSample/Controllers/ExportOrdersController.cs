@@ -38,10 +38,10 @@ namespace Weland.Cs.Api.Sample.ExportOrderServer.Controllers
     [Route("api/export/sample")]
     public class ExportOrdersController : ControllerBase
     {
-        private static readonly IList<ExportOrders> orders = new List<ExportOrders>();
+        private static readonly IList<ExportOrders> Orders = new List<ExportOrders>();
 
         /// <summary>
-        /// This method shows a sample implemetation of the export order post method required by the Compact Store Export API.
+        /// This method shows a sample implementation of the export order post method required by the Compact Store Export API.
         /// 
         /// Minimum requirement for this method is:
         /// - HTTP method POST
@@ -80,7 +80,7 @@ namespace Weland.Cs.Api.Sample.ExportOrderServer.Controllers
         [HttpGet]
         public ActionResult<IList<ExportOrders>> Get()
         {
-            return Ok(orders);
+            return Ok(Orders);
         }
 
         private static bool IsAuthenticated(string providedApiKey)
@@ -112,13 +112,13 @@ namespace Weland.Cs.Api.Sample.ExportOrderServer.Controllers
                     });
                 }
             }
-            orders.Add(storedOrders);
+            Orders.Add(storedOrders);
 
             return multiStatusResponse.results.Count == 0;
         }
         private static bool IsValid(ExportOrders.ExportOrder order)
         {
-            return order.attributes != null && order.attributes.assignmentTypeId == 2;
+            return order.attributes is {assignmentTypeId: 2};
         }
 
         public class ApiKeyHeaderAttribute : FromHeaderAttribute
