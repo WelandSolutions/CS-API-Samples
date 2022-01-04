@@ -41,27 +41,35 @@ namespace Weland.Cs.Api.Sample.ImportClient.Services
         private const string CsApiImportOrdersRoot = "api/importOrders";
         private const string CsApiImportItemsRoot = "api/importItems";
 
-        private readonly HttpClient client = new HttpClient();
+        private readonly HttpClient _client = new();
 
         public ImportService()
         {
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(ContentType));
-            client.DefaultRequestHeaders.TryAddWithoutValidation("X-API-KEY", CsApiKey);
+            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(ContentType));
+            _client.DefaultRequestHeaders.TryAddWithoutValidation("X-API-KEY", CsApiKey);
 
         }
         public async Task<ResponseMessage> ImportItemsAsync(IList<ItemDataTable.Item> items)
         {
-            var importItems = new ImportItems();
-            importItems.meta.version = "1";
+            var importItems = new ImportItems
+            {
+                meta =
+                {
+                    version = "1"
+                }
+            };
 
             foreach (var item in items)
             {
                 var importItem = new ImportItems.ImportItem
                 {
                     id = Guid.NewGuid().ToString(),
+                    attributes =
+                    {
+                        itemNo = item.ItemNo,
+                        itemDescription = item.ItemDescription
+                    }
                 };
-                importItem.attributes.itemNo = item.ItemNo;
-                importItem.attributes.itemDescription = item.ItemDescription;
                 importItems.data.Add(importItem);
             }
             return await ImportItemsAsync(importItems);
@@ -69,8 +77,13 @@ namespace Weland.Cs.Api.Sample.ImportClient.Services
 
         public async Task<ResponseMessage> ImportOrdersAsync(IList<OrderDataTable.Order> orders)
         {
-            var importOrders = new ImportOrders();
-            importOrders.meta.version = "1";
+            var importOrders = new ImportOrders
+            {
+                meta =
+                {
+                    version = "1"
+                }
+            };
 
             foreach (var order in orders)
             {
@@ -79,14 +92,16 @@ namespace Weland.Cs.Api.Sample.ImportClient.Services
                     var importOrder = new ImportOrders.ImportOrder
                     {
                         id = Guid.NewGuid().ToString(),
+                        attributes =
+                        {
+                            assignmentTypeId = order.AssignmentType,
+                            orderNo = order.OrderNo,
+                            orderlineNo = order.OrderLineNo,
+                            itemNo = order.ItemNo,
+                            requestedQuantity = order.Quantity
+                        }
                     };
 
-                    importOrder.attributes.assignmentTypeId = order.AssignmentType;
-
-                    importOrder.attributes.orderNo = order.OrderNo;
-                    importOrder.attributes.orderlineNo = order.OrderLineNo;
-                    importOrder.attributes.itemNo = order.ItemNo;
-                    importOrder.attributes.requestedQuantity = order.Quantity;
                     importOrders.data.Add(importOrder);
                 }
             }
@@ -97,8 +112,7 @@ namespace Weland.Cs.Api.Sample.ImportClient.Services
         {
             try
             {
-                var relativePath = CsApiImportItemsRoot;
-                return await SendRequestAsync(relativePath, items);
+                return await SendRequestAsync(CsApiImportItemsRoot, items);
             }
             catch (Exception e)
             {
@@ -109,8 +123,7 @@ namespace Weland.Cs.Api.Sample.ImportClient.Services
         {
             try
             {
-                var relativePath = CsApiImportOrdersRoot;
-                return await SendRequestAsync(relativePath, orders);
+                return await SendRequestAsync(CsApiImportOrdersRoot, orders);
             }
             catch (Exception e)
             {
@@ -124,23 +137,18 @@ namespace Weland.Cs.Api.Sample.ImportClient.Services
                 var importsPayload = imports.Serialize();
                 var uri = CreateUri(relativePath);
                 var data = new StringContent(importsPayload, Encoding.UTF8, ContentType);
-                var response = await client.PostAsync(uri, data);
+                var response = await _client.PostAsync(uri, data);
 
-                if (response.IsSuccessStatusCode)
-                {
-                    return new ResponseMessage { StatusCode = (int)response.StatusCode, Message = $"Imported {imports.Count()} items successfully." };
-                }
-                else
-                {
-                    return new ResponseMessage { StatusCode = (int)response.StatusCode, Message = $"Import failed with status code {response.StatusCode}." };
-                }
+                return response.IsSuccessStatusCode ?
+                    new ResponseMessage { StatusCode = (int)response.StatusCode, Message = $"Imported {imports.Count()} items successfully." } :
+                    new ResponseMessage { StatusCode = (int)response.StatusCode, Message = $"Import failed with status code {response.StatusCode}." };
             }
             catch (Exception e)
             {
                 return new ResponseMessage { StatusCode = 500, Message = $"Import failed with message {e.Message}." };
             }
         }
-        private Uri CreateUri(string relativePath)
+        private static Uri CreateUri(string relativePath)
         {
             var baseUri = CsApiBaseUri;
             if (!baseUri.EndsWith('/'))

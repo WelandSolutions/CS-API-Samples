@@ -2,7 +2,7 @@
 
 ## Overview
 
-Sample server and client created to help understanding the Compact Store API (CS API). .NET Core 3.1 is used.
+Sample server and client created to help understanding the Compact Store API (CS API). .NET Core is used.
 
 ## ImportOrderClientSample
 

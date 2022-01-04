@@ -31,7 +31,7 @@ namespace Weland.Cs.Api.Sample.ImportClient.Models
 {
     public class ItemDataTable
     {
-        private readonly IList<ItemDataTable.Item> _items = new List<ItemDataTable.Item>();
+        private readonly IList<Item> _items = new List<Item>();
 
         public void AddItem(Item item)
         {

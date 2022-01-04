@@ -31,7 +31,7 @@ namespace Weland.Cs.Api.Sample.ImportClient.Models
 {
     public class OrderDataTable
     {
-        private readonly IList<OrderDataTable.Order> _orders = new List<OrderDataTable.Order>();
+        private readonly IList<Order> _orders = new List<Order>();
 
         public void AddOrder(Order order)
         {
@@ -40,18 +40,18 @@ namespace Weland.Cs.Api.Sample.ImportClient.Models
         public object AsDataSource()
         {
             var orderDataTable = new DataTable();
-            DataColumn status = new DataColumn("Status", typeof(string));
-            DataColumn assignementType = new DataColumn("AssignmentType", typeof(string));
-            DataColumn orderNo = new DataColumn("OrderNo", typeof(string));
-            DataColumn orderLineNo = new DataColumn("OrderLineNo", typeof(string));
-            DataColumn itemNo = new DataColumn("ItemNo", typeof(string));
-            DataColumn quantity = new DataColumn("Quantity", typeof(float));
+            var status = new DataColumn("Status", typeof(string));
+            var assignmentType = new DataColumn("AssignmentType", typeof(string));
+            var orderNo = new DataColumn("OrderNo", typeof(string));
+            var orderLineNo = new DataColumn("OrderLineNo", typeof(string));
+            var itemNo = new DataColumn("ItemNo", typeof(string));
+            var quantity = new DataColumn("Quantity", typeof(float));
             orderNo.MaxLength = 50;
             orderLineNo.MaxLength = 30;
             itemNo.MaxLength = 50;
 
             orderDataTable.Columns.Add(status);
-            orderDataTable.Columns.Add(assignementType);
+            orderDataTable.Columns.Add(assignmentType);
             orderDataTable.Columns.Add(orderNo);
             orderDataTable.Columns.Add(orderLineNo);
             orderDataTable.Columns.Add(itemNo);
@@ -91,8 +91,7 @@ namespace Weland.Cs.Api.Sample.ImportClient.Models
             {
                 result = new ValidationResult();
 
-                if (AssignmentType < 1 ||
-                    AssignmentType > 2 ||
+                if (AssignmentType is < 1 or > 2 ||
                     string.IsNullOrEmpty(OrderNo) ||
                     OrderNo.Length > 50 ||
                     string.IsNullOrEmpty(OrderLineNo) ||
