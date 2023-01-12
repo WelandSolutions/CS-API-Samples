@@ -7,9 +7,13 @@ Sample server and client created to help understanding the Compact Store API (CS
 ## ImportOrderClientSample
 
 The sample provides a Windows Forms application for importing orders and items.
-The main logic for communicating with CS API is implemented in class Weland.Cs.Api.Sample.ImportClient.Services.ImportService
+The main logic for communicating with CS API is implemented in class Weland.Cs.Api.Sample.ImportClient.Services.ImportService.
+
+Swagger description for import order interface is found in the Models folder (Inbound_<version>.yml)
 
 ## ExportOrderServerSample
 
 The sample provides a ASP.NET API application for receiving export orders. The application can be hosted in IIS or as a stand alone application running Kestrel.
 The main server logic is implemented in class namespace Weland.Cs.Api.Sample.ExportOrderServer.Controllers.ExportOrdersController
+
+Swagger description for export order interface is found in the Models folder (Export_<version>.yml)

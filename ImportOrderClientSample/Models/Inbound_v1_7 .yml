@@ -1,0 +1,1014 @@
+x-generator: NSwag v13.2.0.0 (NJsonSchema v10.1.2.0 (Newtonsoft.Json v9.0.0.0))
+openapi: 3.0.0
+info:
+  title: Compact Store API
+  description: Compact Store REST API
+  version: v1.7
+servers:
+  - url: 'https://localhost:12443'
+paths:
+  /api/exportOrders:
+    get:
+      tags:
+        - Export
+      operationId: Export_GetExportOrders
+      parameters:
+        - name: X-API-KEY
+          in: header
+          schema:
+            type: string
+            nullable: true
+          x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportOrders'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorMessage'
+    post:
+      tags:
+        - Export
+      operationId: Export_AcknowledgeExportOrders
+      parameters:
+        - name: X-API-KEY
+          in: header
+          schema:
+            type: string
+            nullable: true
+          x-position: 1
+      requestBody:
+        x-name: exportIds
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: integer
+                format: int32
+        required: true
+        x-position: 2
+      responses:
+        '204':
+          description: ''
+        '207':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultiStatusResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorMessage'
+  /api/importOrders:
+    post:
+      tags:
+        - Import
+      operationId: Import_ImportOrders
+      parameters:
+        - name: X-API-KEY
+          in: header
+          schema:
+            type: string
+            nullable: true
+          x-position: 1
+      requestBody:
+        x-name: importOrders
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportOrders'
+        required: true
+        x-position: 2
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorMessage'
+  /api/importItems:
+    post:
+      tags:
+        - Import
+      operationId: Import_ImportItems
+      parameters:
+        - name: X-API-KEY
+          in: header
+          schema:
+            type: string
+            nullable: true
+          x-position: 1
+      requestBody:
+        x-name: importItems
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportItems'
+        required: true
+        x-position: 2
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorMessage'
+  /api/lifts/inventory:
+    get:
+      tags:
+        - Lift
+      operationId: Lift_GetInventory
+      parameters:
+        - name: X-API-KEY
+          in: header
+          schema:
+            type: string
+            nullable: true
+          x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LiftsInventory'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorMessage'
+  /api/lifts/freeStorePositions:
+    get:
+      tags:
+        - Lift
+      operationId: Lift_GetFreeStorePositions
+      parameters:
+        - name: X-API-KEY
+          in: header
+          schema:
+            type: string
+            nullable: true
+          x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LiftsFreeStorePositions'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorMessage'
+  /api/ping:
+    get:
+      tags:
+        - Ping
+      operationId: Ping_Ping
+      parameters:
+        - name: X-API-KEY
+          in: header
+          schema:
+            type: string
+            nullable: true
+          x-position: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PingResponse'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+components:
+  schemas:
+    InternalServerErrorMessage:
+      type: object
+      additionalProperties: false
+      properties:
+        context:
+          type: string
+          nullable: true
+        details:
+          type: string
+          nullable: true
+    ExportOrders:
+      type: object
+      additionalProperties: false
+      required:
+        - meta
+        - data
+      properties:
+        meta:
+          $ref: '#/components/schemas/Meta'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExportOrder'
+    Meta:
+      type: object
+      additionalProperties: false
+      required:
+        - version
+      properties:
+        version:
+          type: string
+          minLength: 1
+    ExportOrder:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+        - id
+        - attributes
+      properties:
+        type:
+          type: string
+          minLength: 1
+        id:
+          type: string
+          maxLength: 80
+          minLength: 1
+        attributes:
+          $ref: '#/components/schemas/Attributes'
+    Attributes:
+      type: object
+      additionalProperties: false
+      properties:
+        actionCode:
+          type: integer
+        actualQuantity:
+          type: number
+          format: double
+        assignmentTypeId:
+          type: integer
+        batchNo:
+          type: string
+          nullable: true
+        companyId:
+          type: string
+          nullable: true
+        createdTime:
+          type: string
+          nullable: true
+        customerValue1:
+          type: string
+          nullable: true
+        customerValue2:
+          type: string
+          nullable: true
+        customerValue3:
+          type: string
+          nullable: true
+        customerValue4:
+          type: string
+          nullable: true
+        customerValue5:
+          type: string
+          nullable: true
+        customerValue6:
+          type: string
+          nullable: true
+        customerValue7:
+          type: string
+          nullable: true
+        fromStorePosition:
+          type: string
+          nullable: true
+        itemNo:
+          type: string
+          nullable: true
+        orderInfo:
+          type: string
+          nullable: true
+        orderlineNo:
+          type: string
+          nullable: true
+        orderNo:
+          type: string
+          nullable: true
+        partialDelivery:
+          type: boolean
+        quantityTypeId:
+          type: integer
+        reasonCode:
+          type: string
+          nullable: true
+        requestedQuantity:
+          type: number
+          format: double
+        salesOrderNo:
+          type: string
+          nullable: true
+        salesOrderlineNo:
+          type: string
+          nullable: true
+        serialNo:
+          type: string
+          nullable: true
+        toStorePosition:
+          type: string
+          nullable: true
+        transType:
+          type: integer
+    ProblemDetails:
+      type: object
+      additionalProperties: false
+      properties:
+        type:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        status:
+          type: integer
+          format: int32
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        instance:
+          type: string
+          nullable: true
+        extensions:
+          type: object
+          nullable: true
+          additionalProperties: {}
+    MultiStatusResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/MultiStatusDetails'
+    MultiStatusDetails:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          nullable: true
+        status:
+          type: integer
+          format: int32
+    ImportOrders:
+      type: object
+      additionalProperties: false
+      required:
+        - meta
+        - data
+      properties:
+        meta:
+          $ref: '#/components/schemas/Meta2'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImportOrder'
+    Meta2:
+      type: object
+      additionalProperties: false
+      required:
+        - version
+      properties:
+        version:
+          type: string
+          minLength: 1
+        purpose:
+          type: string
+          nullable: true
+    ImportOrder:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+        - id
+        - attributes
+      properties:
+        type:
+          type: string
+          minLength: 1
+        id:
+          type: string
+          maxLength: 80
+          minLength: 1
+        attributes:
+          $ref: '#/components/schemas/Attributes2'
+    Attributes2:
+      type: object
+      additionalProperties: false
+      required:
+        - assignmentTypeId
+      properties:
+        addressInfo1:
+          type: string
+          maxLength: 50
+          nullable: true
+        addressInfo2:
+          type: string
+          maxLength: 50
+          nullable: true
+        altItemDescription:
+          type: string
+          maxLength: 200
+          nullable: true
+        area:
+          type: string
+          maxLength: 50
+          nullable: true
+        assignmentTypeId:
+          type: integer
+          maximum: 3
+          minimum: 1
+        batchNo:
+          type: string
+          maxLength: 50
+          nullable: true
+        comment:
+          type: string
+          maxLength: 500
+          nullable: true
+        companyId:
+          type: string
+          maxLength: 50
+          nullable: true
+        countryCode:
+          type: string
+          maxLength: 10
+          nullable: true
+        country:
+          type: string
+          maxLength: 50
+          nullable: true
+        countryOfOrigin:
+          type: string
+          maxLength: 50
+          nullable: true
+        customerField1:
+          type: string
+          maxLength: 30
+          nullable: true
+        customerField2:
+          type: string
+          maxLength: 30
+          nullable: true
+        customerField3:
+          type: string
+          maxLength: 30
+          nullable: true
+        customerField4:
+          type: string
+          maxLength: 30
+          nullable: true
+        customerField5:
+          type: string
+          maxLength: 30
+          nullable: true
+        customerField6:
+          type: string
+          maxLength: 30
+          nullable: true
+        customerField7:
+          type: string
+          maxLength: 30
+          nullable: true
+        deliveryDay:
+          type: string
+          maxLength: 10
+          nullable: true
+        dangerousGoods:
+          type: string
+          maxLength: 70
+          nullable: true
+        deliveryName:
+          type: string
+          maxLength: 50
+          nullable: true
+        deliveryTerms:
+          type: string
+          maxLength: 50
+          nullable: true
+        deliveryTime:
+          type: string
+          maxLength: 8
+          nullable: true
+        deliveryWay:
+          type: string
+          maxLength: 50
+          nullable: true
+        frequencyId:
+          type: integer
+          maximum: 32767
+          minimum: -32768
+        goodsMark:
+          type: string
+          maxLength: 50
+          nullable: true
+        grossWeight:
+          type: number
+          format: double
+          maximum: 10000000000000000000
+          minimum: 0
+        itemDescription:
+          type: string
+          maxLength: 200
+          nullable: true
+        itemGroupDescription:
+          type: string
+          maxLength: 50
+          nullable: true
+        itemNo:
+          type: string
+          maxLength: 50
+          nullable: true
+        itemNoPallet:
+          type: string
+          maxLength: 50
+          nullable: true
+        itemNoPrimaryPackage:
+          type: string
+          maxLength: 50
+          nullable: true
+        itemNoSecondaryPackage:
+          type: string
+          maxLength: 50
+          nullable: true
+        itemNoTertiaryPackage:
+          type: string
+          maxLength: 50
+          nullable: true
+        mergeAllowed:
+          type: boolean
+          default: false
+        netWeight:
+          type: number
+          format: double
+          maximum: 10000000000000000000
+          minimum: 0
+        orderComment:
+          type: string
+          maxLength: 500
+          nullable: true
+        orderInfo:
+          type: string
+          maxLength: 50
+          nullable: true
+        orderlineNo:
+          type: string
+          maxLength: 30
+          nullable: true
+        orderlineType:
+          type: string
+          maxLength: 20
+          nullable: true
+        orderNo:
+          type: string
+          maxLength: 50
+          nullable: true
+        orderpoint:
+          type: integer
+          format: int32
+          maximum: 2147483647
+          minimum: -2147483648
+        owner:
+          type: string
+          maxLength: 30
+          nullable: true
+        ownerName:
+          type: string
+          maxLength: 50
+          nullable: true
+        package:
+          type: number
+          format: double
+          maximum: 10000000000000000000
+          minimum: 0
+        pallet:
+          type: number
+          format: double
+          maximum: 10000000000000000000
+          minimum: 0
+        phoneNo:
+          type: string
+          maxLength: 20
+          nullable: true
+        pickUnit:
+          type: string
+          maxLength: 10
+          nullable: true
+        priority:
+          type: integer
+          format: int32
+          maximum: 2147483647
+          minimum: -2147483648
+        quantityPallet:
+          type: number
+          format: double
+          maximum: 10000000000000000000
+          minimum: 0
+        quantityPrimaryPackage:
+          type: number
+          format: double
+          maximum: 10000000000000000000
+          minimum: 0
+        quantitySecondaryPackage:
+          type: number
+          format: double
+          maximum: 10000000000000000000
+          minimum: 0
+        quantityTertiaryPackage:
+          type: number
+          format: double
+          maximum: 10000000000000000000
+          minimum: 0
+        receiver:
+          type: string
+          maxLength: 30
+          nullable: true
+        receiverName:
+          type: string
+          maxLength: 50
+          nullable: true
+        receiverGroupDescription:
+          type: string
+          maxLength: 50
+          nullable: true
+        receiverMergeAllowed:
+          type: boolean
+          default: false
+        requestedQuantity:
+          type: number
+          format: double
+          maximum: 10000000000000000000
+          minimum: 0
+        salesOrderNo:
+          type: string
+          maxLength: 30
+          nullable: true
+        salesOrderlineNo:
+          type: string
+          maxLength: 30
+          nullable: true
+        serialNo:
+          type: string
+          maxLength: 50
+          nullable: true
+        shippingAgent:
+          type: string
+          maxLength: 50
+          nullable: true
+        startDirectly:
+          type: boolean
+          default: false
+        storePosition:
+          type: string
+          maxLength: 30
+          nullable: true
+        supplierItemNo:
+          type: string
+          maxLength: 50
+          nullable: true
+        town:
+          type: string
+          maxLength: 50
+          nullable: true
+        zipCode:
+          type: string
+          maxLength: 50
+          nullable: true
+    ImportItems:
+      type: object
+      additionalProperties: false
+      required:
+        - meta
+        - data
+      properties:
+        meta:
+          $ref: '#/components/schemas/Meta3'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImportItem'
+    Meta3:
+      type: object
+      additionalProperties: false
+      required:
+        - version
+      properties:
+        version:
+          type: string
+          minLength: 1
+    ImportItem:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+        - id
+        - attributes
+      properties:
+        type:
+          type: string
+          minLength: 1
+        id:
+          type: string
+          maxLength: 80
+          minLength: 1
+        attributes:
+          $ref: '#/components/schemas/ItemAttributes'
+    ItemAttributes:
+      type: object
+      additionalProperties: false
+      required:
+        - itemDescription
+        - itemNo
+      properties:
+        altItemDescription:
+          type: string
+          maxLength: 200
+          nullable: true
+        comment:
+          type: string
+          nullable: true
+        customerField1:
+          type: string
+          maxLength: 30
+          nullable: true
+        customerField2:
+          type: string
+          maxLength: 30
+          nullable: true
+        customerField3:
+          type: string
+          maxLength: 30
+          nullable: true
+        customerField4:
+          type: string
+          maxLength: 30
+          nullable: true
+        customerField5:
+          type: string
+          maxLength: 30
+          nullable: true
+        customerField6:
+          type: string
+          maxLength: 30
+          nullable: true
+        customerField7:
+          type: string
+          maxLength: 30
+          nullable: true
+        grossWeight:
+          type: number
+          format: double
+          maximum: 10000000000000000000
+          minimum: 0
+        itemDescription:
+          type: string
+          maxLength: 200
+          minLength: 1
+        itemGroupDescription:
+          type: string
+          maxLength: 50
+          nullable: true
+        itemNo:
+          type: string
+          maxLength: 50
+          minLength: 1
+        netWeight:
+          type: number
+          format: double
+          maximum: 10000000000000000000
+          minimum: 0
+        serialNo:
+          type: string
+          maxLength: 50
+          nullable: true
+        supplierItemNo:
+          type: string
+          maxLength: 50
+          nullable: true
+    LiftsInventory:
+      type: object
+      additionalProperties: false
+      required:
+        - meta
+        - data
+      properties:
+        meta:
+          $ref: '#/components/schemas/Meta4'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Lift'
+    Meta4:
+      type: object
+      additionalProperties: false
+      required:
+        - version
+      properties:
+        version:
+          type: string
+          minLength: 1
+    Lift:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+        - id
+        - attributes
+      properties:
+        type:
+          type: string
+          maxLength: 16
+          minLength: 1
+        id:
+          type: string
+          maxLength: 80
+          minLength: 1
+        attributes:
+          $ref: '#/components/schemas/Attributes3'
+    Attributes3:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/ItemQuantity'
+    ItemQuantity:
+      type: object
+      additionalProperties: false
+      required:
+        - batchNo
+        - itemNo
+        - quantity
+      properties:
+        batchNo:
+          type: string
+          minLength: 1
+        itemNo:
+          type: string
+          minLength: 1
+        quantity:
+          type: number
+          format: double
+    LiftsFreeStorePositions:
+      type: object
+      additionalProperties: false
+      required:
+        - meta
+        - data
+      properties:
+        meta:
+          $ref: '#/components/schemas/Meta5'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Lift2'
+    Meta5:
+      type: object
+      additionalProperties: false
+      required:
+        - version
+      properties:
+        version:
+          type: string
+          minLength: 1
+    Lift2:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+        - id
+        - attributes
+      properties:
+        type:
+          type: string
+          minLength: 1
+        id:
+          type: string
+          maxLength: 80
+          minLength: 1
+        attributes:
+          $ref: '#/components/schemas/Attributes4'
+    Attributes4:
+      type: object
+      additionalProperties: false
+      properties:
+        freePositions:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/FreeStorePosition'
+    FreeStorePosition:
+      type: object
+      additionalProperties: false
+      required:
+        - size
+        - noOfFreePositions
+      properties:
+        size:
+          $ref: '#/components/schemas/StorePositionSize'
+        noOfFreePositions:
+          type: integer
+          format: int32
+    StorePositionSize:
+      type: object
+      additionalProperties: false
+      required:
+        - height
+        - width
+        - depth
+      properties:
+        height:
+          type: number
+          format: double
+        width:
+          type: number
+          format: double
+        depth:
+          type: number
+          format: double
+    PingResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          nullable: true
+        version:
+          type: string
+          nullable: true

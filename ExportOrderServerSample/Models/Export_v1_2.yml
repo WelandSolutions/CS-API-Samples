@@ -1,0 +1,178 @@
+x-generator: NSwag v13.2.0.0 (NJsonSchema v10.1.2.0 (Newtonsoft.Json v9.0.0.0))
+openapi: 3.0.0
+info:
+  title: Compact Store API
+  description: Compact Store REST API
+  version: v1.2
+servers:
+  - url: 'https://localhost:44313'
+paths:
+  /api/exportOrders:
+    post:
+      tags:
+        - ExportOrders
+      operationId: ExportOrdersPost
+      parameters:
+        - name: X-API-KEY
+          in: header
+          schema:
+            type: string
+            nullable: true
+          x-position: 1
+      requestBody:
+        x-name: exportOrders
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExportOrders'
+        required: true
+        x-position: 2
+      responses:
+        '204':
+          description: ''
+        '207':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultiStatusResponse'
+components:
+  schemas:
+    MultiStatusResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/MultiStatusDetails'
+    MultiStatusDetails:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          nullable: true
+        status:
+          type: integer
+          format: int32
+    ExportOrders:
+      type: object
+      additionalProperties: false
+      required:
+        - meta
+        - data
+      properties:
+        meta:
+          $ref: '#/components/schemas/Meta'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExportOrder'
+    Meta:
+      type: object
+      additionalProperties: false
+      required:
+        - version
+      properties:
+        version:
+          type: string
+          minLength: 1
+    ExportOrder:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+        - id
+        - attributes
+      properties:
+        type:
+          type: string
+          minLength: 1
+        id:
+          type: string
+          maxLength: 80
+          minLength: 1
+        attributes:
+          $ref: '#/components/schemas/Attributes'
+    Attributes:
+      type: object
+      additionalProperties: false
+      properties:
+        actionCode:
+          type: integer
+        actualQuantity:
+          type: number
+          format: double
+        assignmentTypeId:
+          type: integer
+        batchNo:
+          type: string
+          nullable: true
+        companyId:
+          type: string
+          nullable: true
+        createdTime:
+          type: string
+          nullable: true
+        customerValue1:
+          type: string
+          nullable: true
+        customerValue2:
+          type: string
+          nullable: true
+        customerValue3:
+          type: string
+          nullable: true
+        customerValue4:
+          type: string
+          nullable: true
+        customerValue5:
+          type: string
+          nullable: true
+        customerValue6:
+          type: string
+          nullable: true
+        customerValue7:
+          type: string
+          nullable: true
+        fromStorePosition:
+          type: string
+          nullable: true
+        itemNo:
+          type: string
+          nullable: true
+        orderInfo:
+          type: string
+          nullable: true
+        orderlineNo:
+          type: string
+          nullable: true
+        orderNo:
+          type: string
+          nullable: true
+        partialDelivery:
+          type: boolean
+        quantityTypeId:
+          type: integer
+        reasonCode:
+          type: string
+          nullable: true
+        requestedQuantity:
+          type: number
+          format: double
+        salesOrderNo:
+          type: string
+          nullable: true
+        salesOrderlineNo:
+          type: string
+          nullable: true
+        serialNo:
+          type: string
+          nullable: true
+        toStorePosition:
+          type: string
+          nullable: true
+        transType:
+          type: integer
